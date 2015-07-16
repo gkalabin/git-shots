@@ -1,6 +1,8 @@
 # git-shots
 Take photo every time you commit then make a film
 
+[Demo](http://www.youtube.com/watch?v=bkRcjVNhzFU)
+
 ## Prerequisites
  * git
  * fswebcam
