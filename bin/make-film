@@ -1,0 +1,31 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+cd "$(dirname "$0")"
+SRC_SHOTS=~/.gitshots
+FRAMES_DIR=gitframes
+OUTPUT_VIDEO=gitmovie.avi
+
+flist=$(mktemp)
+trap 'rm "$flist" -f' EXIT
+export wdir="$FRAMES_DIR"
+outvid="$OUTPUT_VIDEO"
+
+if [[ ! -d "$wdir" ]]; then
+  mkdir --parents "$wdir"
+  find "$SRC_SHOTS" -name '*.png' -type f | sort > "$flist"
+  export ftot=$(wc -l "$flist" | cut -f1 -d " ")
+  copy_frame() {
+    local fname="$1"
+    local fnum="$2"
+    echo -ne "$fnum/$ftot\r"
+    convert "$fname" "$wdir/${fnum}.png"
+  }
+  export -f copy_frame
+  parallel --env copy_frame --xapply copy_frame :::: "$flist" ::: $(seq --format='%04.0f' 1 "$ftot")
+fi
+
+rm --force "$outvid"
+ffmpeg -framerate 25 -r 10 -s 720x480 -i $wdir/'%04d.png' -q:v 0 "$outvid"

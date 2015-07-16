@@ -1,0 +1,14 @@
+#!/bin/bash
+set -o errexit
+set -o nounset
+set -o pipefail
+
+LOG_FILE=/var/log/git-hooks/post-commit-log
+SCRIPTS_DIR=~/.git-post-commit-scripts
+
+# TODO: rewrite using find: find "$SCRIPTS_DIR" -type f -executable -exec {} &>> "$LOG_FILE"\;
+for file in $SCRIPTS_DIR/* ; do
+  if [[ -x $file ]]; then
+    "$file" >>"$LOG_FILE" 2>&1
+  fi
+done
