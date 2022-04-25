@@ -4,17 +4,22 @@ Take photo every time you commit then make a film
 [Demo](http://www.youtube.com/watch?v=bkRcjVNhzFU)
 
 ## Prerequisites
- * git
- * fswebcam
- * gnu parallel
- * ffmpeg
- * imagemagick
+  * git
+  * imagesnap
+  * ffmpeg
 
 ## Setup
 Following steps assume that you have no local post-commit hooks. If you have - use your brain.
- * Place `.git-templates` and `.git-post-commit-scripts` in your home dir.
- * Tell git where to take templates: `git config --global init.templatedir '~/.git-templates'`
- * Update your existing repos with `git init`
+  * `brew install imagesnap`
+  * `git clone`
+  * switch to cloned directory
+  * `cp -r .git-templates ~/.git-templates && cp -r .git-post-commit-scripts ~/.git-post-commit-scripts`
+  * tell git where to find templates `git config --global init.templatedir '~/.git-templates'`
+  * update your existing repos with `git init`
+    * if `.git/post-commit` already exists in project `git init` will not update it
+    * you will need to `rm` the file and rerun or merge it manually.
+  * commits will now put a photo in `~/.gitshots` directory and append activity to `log.txt`
 
 ## Making a film
- * just run `bin/make-film` - code is small and straightforward
+  * requires `ffmpeg`
+  * run `bin/make-film` will output `film_${timestamp}.mp4` to `~/.gitshots`
