@@ -4,9 +4,9 @@ set -o nounset
 set -o pipefail
 
 mkdir -p ~/.gitshots
-touch ~/.gitshots/log.txt
-
 LOG_FILE=~/.gitshots/log.txt
+touch "$LOG_FILE"
+
 SCRIPTS_DIR=~/.git-post-commit-scripts
 
 for file in $SCRIPTS_DIR/* ; do
